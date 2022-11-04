@@ -1,0 +1,56 @@
+1-8
+1
+	SELECT DISTINCT `key`
+	FROM 
+		ArrayTbl2 AT1
+	WHERE NOT EXISTS #存在しない
+		(SELECT
+			*
+		 FROM
+		 	ArrayTbl2 AT2
+		 WHERE
+		 	AT1.`key` = AT2.`key`
+		 AND
+		    (AT2.val <> 1 OR AT2.val IS NULL)
+		 );
+		 
+		 
+2
+	SELECT 
+		*
+	FROM
+		Projects P1
+	WHERE
+		'OK' =ALL(SELECT
+					CASE WHEN step_nbr <= 1 #工程番号が1以下
+						 AND status = '完了' THEN 'OK' #状態が完了
+						 WHEN step_nbr > 1 #工程番号が1より大きい
+						 AND status = '待機' THEN 'OK'#状態が待機
+					ELSE
+						'NO'
+					END
+				 FROM
+				 	Projects P2
+				 WHERE
+				 	P1.Project_id = P2.Project_id #プロジェクトID
+				 );
+				 
+3
+	SELECT
+		Dividend.num AS prime
+	FROM
+		Numbers Dividend, #被除数
+		Numbers Divisor #除数
+	WHERE
+		1 < Dividend.num
+	AND
+		Divisor.num <= SQRT(Dividend.num) #平方根
+	GROUP BY
+		Dividend.num
+	HAVING
+		SUM(CASE WHEN
+					MOD(Dividend.num, Divisor.num) = 0 THEN 1 #除算
+				 ELSE 0
+				 END) = 1
+	ORDER BY
+		prime;
