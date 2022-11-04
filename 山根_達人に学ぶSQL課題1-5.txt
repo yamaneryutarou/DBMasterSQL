@@ -1,0 +1,52 @@
+1-5
+1
+	SELECT
+		MASTER.age_class AS age_class, #年齢階級
+		MASTER.sex_cd AS sex_cd, #性別コード
+		SUM(CASE WHEN pref_name IN ('青森','秋田') #青森、秋田の場合
+					 THEN population #人口
+				ELSE NULL
+				END) AS pop_tohoku, #東北
+		SUM(CASE WHEN pref_name IN ('東京','千葉') #東京、千葉の場合
+		 		 THEN population #人口
+				 ELSE NULL
+				 END) AS pop_kanto #関東
+	FROM
+		(SELECT
+			age_class, #年齢階級
+			sex_cd #性別コード
+		 FROM
+		 	TblAge #年齢階級マスタ
+		 CROSS JOIN
+		 	TblSex #性別マスタ
+		 ) MASTER
+	LEFT JOIN
+	 	TblPop TP #人口構成テーブル
+	ON
+		MASTER.age_class = TP.age_class #年齢階級
+	AND
+		MASTER.sex_cd = TP.sex_cd #性別コード
+	GROUP BY
+	 	MASTER.age_class,MASTER.sex_cd
+	;
+	
+	
+2
+	SELECT
+		PT.employee, #社員
+		COUNT(CH.Child) AS Child_cnt #子供数
+	FROM
+		Personnel PT #社員テーブル
+	LEFT JOIN
+		Children CH #子供テーブル
+	ON
+		CH.Child IN (PT.Child_1,PT.Child_2,PT.Child_3)
+	GROUP BY
+		employee
+	;
+	
+	
+3
+	MySQLにマージ機能なし
+	
+	
