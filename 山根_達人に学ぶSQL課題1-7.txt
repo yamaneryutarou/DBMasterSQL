@@ -1,0 +1,39 @@
+1-7
+1
+	SELECT CASE WHEN COUNT(*) = (SELECT COUNT(*) FROM tbl_A) #テーブルA
+				AND COUNT(*) = (SELECT COUNT(*) FROM tbl_B) #テーブルB
+				THEN '等しい'
+				ELSE '等しくない'
+				END AS 結果
+	FROM
+		(SELECT * FROM tbl_A
+		UNION
+		SELECT * FROM tbl_B) TMP
+	;
+	
+	
+2
+	SELECT
+		emp #社員
+	FROM
+		EmpSkills ES1 #社員スキルテーブル
+		
+	WHERE
+		NOT EXISTS #存在しないもの
+			(SELECT
+				skill #技術
+			FROM
+				Skills #技術テーブル
+			EXCEPT #差集合
+			SELECT
+				skill #技術
+			FROM
+				EmpSkills ES2 #社員スキルテーブル
+			WHERE
+				ES1.emp = ES2.emp) #社員
+	GROUP BY
+		emp #社員でグループ化
+	HAVING
+		COUNT(*) = (SELECT COUNT(*) FROM Skills) #スキル数
+	;
+
