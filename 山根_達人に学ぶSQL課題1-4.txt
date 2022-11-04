@@ -1,0 +1,41 @@
+1-4
+1
+	SELECT
+		CASE
+			 WHEN COUNT(*) <> MAX(seq) THEN 'Ž•”²‚¯‚ ‚è'
+		ELSE
+			'Ž•”²‚¯‚È‚µ'
+		END  AS gap
+	FROM
+		SeqTbl
+	;
+
+2
+	SELECT
+		dpt
+	FROM
+		students
+	GROUP BY
+		dpt
+	HAVING
+		COUNT(*) = SUM(CASE 
+							WHEN sbmt_date BETWEEN '2005-09-01' AND '2005-09-30' THEN 1
+						ELSE 0
+						END
+						)
+	;
+
+3
+	SELECT
+		SI.shop,
+		COUNT(SI.item) AS my_item_cnt,
+		(SELECT COUNT(item) from items1) - COUNT(SI.item) AS diff_cnt
+	FROM
+		shopitems SI,items1 I
+	WHERE
+		SI.item = I.item
+	GROUP BY
+		SI.shop
+	;
+		
+		
