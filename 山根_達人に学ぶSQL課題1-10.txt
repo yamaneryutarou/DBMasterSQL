@@ -1,0 +1,27 @@
+1-10
+1
+	SELECT
+		center #拠点
+	FROM
+		Materials2
+	GROUP BY
+		center #拠点
+	HAVING
+		#名前を合体して一致しないもの
+		COUNT(CONCAT(Material,orgland)) <> COUNT(DISTINCT CONCAT(Material,orgland));
+
+2	
+	SELECT
+		student_id #学生ID
+	FROM
+		TestScores
+	WHERE
+		 subject IN ('算数','国語') #算数、国語で絞る
+	GROUP BY
+		student_id
+	HAVING
+		SUM(CASE WHEN subject = '算数' AND score >= 80 THEN 1 #算数の点数80点以上
+			 	 WHEN subject = '国語' AND score >= 50 THEN 1 #国語の点数50点以上
+			ELSE 0
+			END) = 2
+		;
