@@ -1,0 +1,44 @@
+1-2
+1
+	SELECT 
+		F1.name AS name_1,
+		F2.name AS name_2
+	FROM
+		fruits F1,
+		fruits F2
+	WHERE
+		F1.name >= F2.name
+	;
+	
+	
+2
+	SELECT 
+		DP1.District AS District, #地方
+		DP1.name AS name, #商品名
+		MAX(DP1.Price) AS Price, #価格
+		COUNT(DP2.name) + 1 AS rank_1 #ランキング
+	FROM
+		DistrictProducts DP1
+	LEFT OUTER JOIN
+		DistrictProducts DP2
+	ON
+		DP1.District = DP2.District
+	AND
+		DP1.price < DP2.price
+	GROUP BY
+		DP1.District,DP1.name
+	;
+	
+	
+3
+	UPDATE
+		DistrictProducts2 DP1
+	SET
+		rank_1 = (select COUNT(DP2.price) + 1
+	FROM
+		DistrictProducts2 DP2
+	where
+		DP1.District = DP2.District
+	AND
+		DP2.price > DP1.price
+		);
